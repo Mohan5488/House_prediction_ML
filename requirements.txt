@@ -1,5 +1,5 @@
-Django==4.2.7  # Use LTS version
-djangorestframework==3.14.0
-django-cors-headers==4.6.0
-psycopg2-binary==2.9.9  # Lighter PostgreSQL library
+Django==5.1.3
+joblib==1.4.2
 requests==2.32.3
+scikit-learn==1.6.1
+scipy==1.15.1
