@@ -14,6 +14,7 @@
         "src": "/(.*)",
         "dest": "House_price_prediction/wsgi.py"
       }
-    ]
+    ],
+    "installCommand": "pip install --no-cache-dir -r requirements.txt"
 }
   
