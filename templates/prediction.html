@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Price Prediction</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        
+        body {
+            background: #f8f9fa;
+            padding-top: 80px; /* Ensures content doesn't go under navbar */
+        }
+        
+        /* 🔹 NAVIGATION BAR */
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #333;
+            color: #fff;
+            padding: 15px 10%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            transition: background-color 0.3s ease;
+        }
+        
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: #fff;
+            font-size: 16px;
+            font-weight: bold;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #ddd;
+        }
+        
+        /* 🔹 FORM SECTION */
+        section {
+            width: 50%;
+            margin: 80px auto 40px;
+            background: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s ease-in-out;
+        }
+        
+        section:hover {
+            transform: scale(1.02);
+        }
+        
+        h2 {
+            font-size: 26px;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        label {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: #555;
+            text-align: left;
+            width: 100%;
+        }
+        
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s ease-in-out;
+        }
+        
+        button:hover {
+            background: #0056b3;
+        }
+        
+        h3 {
+            margin-top: 20px;
+            font-size: 20px;
+            color: #28a745;
+        }
+        
+        footer {
+            background-color: #f1f1f1;
+            text-align: center;
+            padding: 15px;
+            font-size: 14px;
+            color: #555;
+            position: relative;
+            margin-top: 50px;
+        }
+
+        @media (max-width: 600px) {
+            body {
+                margin-top: 80px;
+            }
+
+            nav {
+                flex-direction: row; 
+                flex-wrap: wrap;    
+                justify-content: space-between;
+                align-items: center;
+            }
+        
+            nav ul {
+                display: flex; /* ✅ Ensure side-by-side layout */
+                flex-direction: row;
+                gap: 10px;
+            }
+        
+            nav ul li {
+                display: inline-block;
+                margin: 0;
+            }
+
+            nav h2 {
+                font-size: 22px;
+                margin-bottom: 12px;
+            }
+
+
+            .about h2, .predict-img h2 {
+                font-size: 22px;
+            }
+
+            .about p {
+                font-size: 14px;
+            }
+
+            .predict-img img {
+                max-width: 100%;
+            }
+            footer{
+                position: fixed;
+                left: 0;right: 0;;bottom: 0;
+            }
+            section {
+                width: 90%; 
+                padding: 20px;
+            }
+        
+            form {
+                width: 100%; 
+            }
+        
+            label {
+                font-size: 14px; 
+                text-align: left;
+            }
+        
+            input, select {
+                width: 100%;
+                padding: 8px;
+                font-size: 14px;
+            }
+        
+            button {
+                padding: 10px;
+                font-size: 14px;
+            }
+        }
+
+        
+    </style>
+</head>
+<body>
+     <nav>
+         <div>
+             <h2 style="color: #fff;">House Price Prediction</h2>
+         </div>
+         <div>
+             <ul>
+                 <li><a href="{% url 'home' %}">Home</a></li>
+                 <li><a href="{% url 'about' %}">About</a></li>
+                 <li><a href="{% url 'predict_home_price' %}">Predict Price</a></li>
+             </ul>
+         </div>
+     </nav>
+
+    <!-- Main Content -->
+    <section style="margin-top: 50px;">
+        <h2>🏡 Home Price Prediction</h2>
+
+        <form method="POST" action="{% url 'predict_home_price' %}">
+            {% csrf_token %}
+            
+            <label>Total Sqft:</label>
+            <input type="number" name="sqft" required><br>
+
+            <label>Bathrooms:</label>
+            <input type="number" name="bath" required><br>
+
+            <label>BHK:</label>
+            <input type="number" name="bhk" required><br>
+
+            <label>Location:</label>
+            <select name="location" id="location">
+                <option value="">Select Location</option>
+                {% for loc in locations %}
+                    <option value="{{ loc }}">{{ loc }}</option>
+                {% endfor %}
+            </select><br>
+
+            <button type="submit">Predict</button>
+        </form>
+
+    {% if estimated_price %}
+        <h3>💰 Estimated Price: <strong>{{ estimated_price }}</strong> Lakhs</h3>
+    {% endif %}
+    </section>
+    <!-- Footer -->
+     <footer>
+         &copy; 2025 House Price Prediction. All rights reserved.
+     </footer>
+</body>
+</html>
